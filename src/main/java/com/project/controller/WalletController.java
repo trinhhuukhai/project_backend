@@ -1,21 +1,16 @@
 package com.project.controller;
 
-import com.project.dto.request.OrderRequest;
 import com.project.dto.request.WalletRequest;
-import com.project.model.Order;
 import com.project.model.Wallet;
 import com.project.response.ResponseResult;
 import com.project.service.OrderItemService;
-import com.project.service.OrderService;
 import com.project.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/wallet")
@@ -43,6 +38,12 @@ public class WalletController {
     public Wallet findbyuser(@RequestBody Long id) {
         return walletService.find(id);
 
+    }
+
+    @GetMapping("/{id}")
+        //Let's return an object with: data, message, status
+    ResponseEntity<ResponseResult> findById(@PathVariable Long id) {
+        return walletService.findById(id);
     }
 
     @PostMapping("/{walletId}/top-up")

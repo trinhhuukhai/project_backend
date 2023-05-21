@@ -14,7 +14,7 @@ public class ReviewRequest {
 
 
     private String content;
-    private int rating;
+//    private int rating;
     private Long productId;
     private  Long userId;
 

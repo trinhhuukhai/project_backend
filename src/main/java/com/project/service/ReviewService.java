@@ -46,7 +46,7 @@ public class ReviewService {
 
         Review review = new Review();
         review.setUser(user);
-        review.setRating(newReview.getRating());
+//        review.setRating(newReview.getRating());
         review.setContent(newReview.getContent());
         review.setProduct(product);
 
@@ -64,7 +64,7 @@ public class ReviewService {
         Optional<Review> updatedReview = reviewRepository.findById(id)
                 .map(review -> {
                     review.setUser(user);
-                    review.setRating(newReview.getRating());
+//                    review.setRating(newReview.getRating());
                     review.setContent(newReview.getContent());
                     review.setProduct(product);
                     return reviewRepository.save(review);

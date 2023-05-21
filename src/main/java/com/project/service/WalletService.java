@@ -1,12 +1,9 @@
 package com.project.service;
 
-import com.project.dto.request.PaymentRequest;
 import com.project.dto.request.WalletRequest;
-import com.project.model.Order;
-import com.project.model.Payment;
+import com.project.model.Category;
 import com.project.model.User;
 import com.project.model.Wallet;
-import com.project.repository.OrderRepository;
 import com.project.repository.PaymentRepository;
 import com.project.repository.UserRepository;
 import com.project.repository.WalletRepository;
@@ -15,10 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.*;
-import java.time.temporal.TemporalAdjusters;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +41,18 @@ public class WalletService {
 
     public Wallet find(Long id){
         return walletRepository.findByUserId(id);
+    }
+
+    public ResponseEntity<ResponseResult> findById(@PathVariable Long id) {
+        Optional<Wallet> foundCategory = walletRepository.findById(id);
+        return foundCategory.isPresent() ?
+                ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseResult("ok", "Query category successfully", foundCategory,1)
+                        //you can replace "ok" with your defined "error code"
+                ):
+                ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseResult("failed", "Cannot find category with id = "+id, "",1)
+                );
     }
 
     public ResponseEntity<ResponseResult> addWallet(WalletRequest request) {
