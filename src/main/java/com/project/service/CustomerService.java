@@ -27,5 +27,18 @@ public class CustomerService {
                         new ResponseResult("failed", "Cannot find order item in shop with id = "+id, "",foundCustomer.size())
                 );
     }
+
+    public ResponseEntity<ResponseResult> deleteCustomer(Long id) {
+        boolean exists = customerRepository.existsById(id);
+        if(exists) {
+            customerRepository.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseResult("ok", "Delete review successfully", "",1)
+            );
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseResult("failed", "Cannot find review to delete", "",1)
+        );
+    }
 }
 

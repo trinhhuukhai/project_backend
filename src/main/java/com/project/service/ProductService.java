@@ -63,7 +63,7 @@ public class ProductService {
         product.setShop(shop);
 
 
-        String productImage = "http://localhost:8080/api/v1/getFile/"+ storageService.storageFile(newPro.getProductImage());
+        String productImage = "http://192.168.43.199:8443/api/v1/getFile/"+ storageService.storageFile(newPro.getProductImage());
 
 
         product.setProductImage(productImage);
@@ -80,7 +80,7 @@ public class ProductService {
         Shop shop = shopRepository.findById(newPro.getShopId()).orElseThrow();
 
 
-        String productImage = "http://localhost:8080/api/v1/getFile/"+ storageService.storageFile(newPro.getProductImage());
+        String productImage = "http://192.168.43.199:8443/api/v1/getFile/"+ storageService.storageFile(newPro.getProductImage());
         Optional<Product> updatedPro = productRepository.findById(id)
                 .map(pro -> {
                     pro.setName(newPro.getName());

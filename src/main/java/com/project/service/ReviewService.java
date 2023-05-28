@@ -56,23 +56,24 @@ public class ReviewService {
 
     }
 
-    public ResponseEntity<ResponseResult> updateReview( ReviewRequest newReview, Long id) {
-
-        Product product = productRepository.findById(newReview.getProductId()).orElseThrow();
-        User user = userRepository.findById(newReview.getUserId()).orElseThrow();
-
+    public ResponseEntity<ResponseResult> updateReview(ReviewRequest request, Long id) {
         Optional<Review> updatedReview = reviewRepository.findById(id)
                 .map(review -> {
-                    review.setUser(user);
-//                    review.setRating(newReview.getRating());
-                    review.setContent(newReview.getContent());
-                    review.setProduct(product);
+                    review.setContent(request.getContent());
                     return reviewRepository.save(review);
                 });
-        return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseResult("ok", "Update review successfully", updatedReview,1)
-        );
+
+        if (updatedReview.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseResult("ok", "Review content updated successfully", updatedReview.get(), 1)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseResult("error", "Review not found", null, 0)
+            );
+        }
     }
+
 
     //Delete a Product => DELETE method
     public ResponseEntity<ResponseResult> deleteReview(Long id) {
@@ -101,7 +102,7 @@ public class ReviewService {
                 );
     }
 
-    public ResponseEntity<ResponseResult> findByProductId(@PathVariable Long id) {
+    public ResponseEntity<ResponseResult> findByProductId( Long id) {
         List<Review> foundReview = reviewRepository.findByProductId(id);
         return !foundReview.isEmpty() ?
                 ResponseEntity.status(HttpStatus.OK).body(

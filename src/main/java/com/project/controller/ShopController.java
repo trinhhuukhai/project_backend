@@ -11,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/shop")
 @RequiredArgsConstructor
@@ -39,6 +42,12 @@ public class ShopController {
     @GetMapping("/{id}/payment")
     ResponseEntity<ResponseResult> findOrderPayment(@PathVariable Long id) {
         return orderItemService.findPayment(id);
+    }
+
+    @GetMapping("/{id}/total-by-day")
+    public ResponseEntity<Map<Date, Double>> getTotalSalesByDay(@PathVariable Long id) {
+        Map<Date, Double> totalSalesByDay = orderItemService.getTotalSalesByDay(id);
+        return ResponseEntity.ok(totalSalesByDay);
     }
 
     @GetMapping("/{id}/customer")

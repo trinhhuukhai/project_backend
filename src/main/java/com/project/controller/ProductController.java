@@ -98,7 +98,7 @@ public class ProductController {
                         new ResponseResult("ok", "Query product item successfully", productList, productList.size())
                         //you can replace "ok" with your defined "error code"
                 ):
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseResult("failed", "Cannot find product item with name = "+ name, "",productList.size())
                 );
     }

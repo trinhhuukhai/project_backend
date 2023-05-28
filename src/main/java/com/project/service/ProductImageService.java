@@ -34,7 +34,7 @@ public class ProductImageService {
         ProductImage img = new ProductImage();
         img.setProduct(product);
 
-        String productImage = "http://localhost:8080/api/v1/getFile/"+ storageService.storageFile(newImage.getUrl());
+        String productImage = "http://192.168.43.199:8443/api/v1/getFile/"+ storageService.storageFile(newImage.getUrl());
 
         img.setUrl(productImage);
 

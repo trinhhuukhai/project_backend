@@ -62,11 +62,8 @@ public class OrderService {
 
 
         User user = userRepository.findById(newOrder.getUser_id()).orElseThrow();
-//        Payment payment = paymentRepository.findById(newOrder.getPaymentId()).orElseThrow();
 
         Order order = new Order();
-
-//        order.setPayment(payment);
         order.setUser(user);
         order.setStatus("Đang xử lý");
         order.setPaymentStatus("Chưa thanh toán");
@@ -201,7 +198,7 @@ public class OrderService {
     }
 
     public ResponseEntity<ResponseResult> findOrderByUserId( Long id) {
-        List<Order> foundOrder = orderRepository.findByUserId(id);
+        List<Order> foundOrder = orderRepository.findByUserIdOrderByOrderDateDesc(id);
         return !foundOrder.isEmpty() ?
                 ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseResult("ok", "Query order item successfully", foundOrder, foundOrder.size())

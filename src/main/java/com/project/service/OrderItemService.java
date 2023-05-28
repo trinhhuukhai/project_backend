@@ -15,10 +15,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.*;
 import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class OrderItemService {
@@ -145,7 +142,7 @@ public class OrderItemService {
                         new ResponseResult("ok", "Query order item in shop successfully", foundOrderItem, foundOrderItem.size())
                         //you can replace "ok" with your defined "error code"
                 ):
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseResult("failed", "Cannot find order item in shop with id = "+id, "",foundOrderItem.size())
                 );
     }
@@ -158,12 +155,25 @@ public class OrderItemService {
                     new ResponseResult("ok", "Query order items in shop successfully", foundOrderItems, foundOrderItems.size())
             );
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+            return ResponseEntity.status(HttpStatus.OK).body(
                     new ResponseResult("failed", "Cannot find order items in shop with id = " + id, "", 0)
             );
         }
     }
 
+
+    public Map<Date, Double> getTotalSalesByDay(Long shopId) {
+        List<Object[]> results = orderItemRepository.getTotalSalesByDay(shopId,"Đã thanh toán");
+        Map<Date, Double> totalSalesByDay = new HashMap<>();
+
+        for (Object[] result : results) {
+            Date orderDate = (Date) result[0];
+            Double totalSales = (Double) result[1];
+            totalSalesByDay.put(orderDate, totalSales);
+        }
+
+        return totalSalesByDay;
+    }
 
     public ResponseEntity<ResponseResult> insertOrderItemFromCart(OrderFromCart orderFromCart) {
         User user = userRepository.findById(orderFromCart.getUserId())

@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
 
-    List<Order> findByUserId(Long id);
+    List<Order> findByUserIdOrderByOrderDateDesc(Long id);
 
     @Query("SELECT o FROM Order o WHERE o.status = ?1")
     List<Order> findByStatus(String status);

@@ -128,6 +128,7 @@ public class CartItemService {
         if (newQuantity <= product.getInventory()) {
             int oldQuantity = cartItem.getQuantity();
             cartItem.setQuantity(newQuantity);
+            cartItem.setTotalPrice(cartItem.getPrice() * newQuantity);
 
             CartItem updatedCartItem = cartItemRepository.save(cartItem);
 

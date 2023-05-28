@@ -23,6 +23,8 @@ public interface OrderItemRepository extends JpaRepository<OrderItem, Long> {
 
     List<OrderItem> findByShopIdAndPaymentStatus(Long shopId, String paymentStatus);
 
+    @Query("SELECT DATE(o.orderDate) AS orderDate, SUM(o.Total) AS totalSales FROM OrderItem o WHERE o.shop.id = :shopId AND o.paymentStatus = :paymentStatus GROUP BY DATE(o.orderDate)")
+    List<Object[]> getTotalSalesByDay(@Param("shopId") Long shopId, @Param("paymentStatus") String paymentStatus);
 
     @Query("SELECT o FROM OrderItem o WHERE o.orderDate BETWEEN :startDate AND :endDate AND o.shop.id = :shopId")
     List<OrderItem>  findOrderItemToday(

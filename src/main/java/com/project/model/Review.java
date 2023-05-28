@@ -28,8 +28,6 @@ public class Review {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-//    @Column(name = "rating")
-//    private int rating;
 
     @Column(name = "content")
     private String content;
