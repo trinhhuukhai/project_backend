@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -47,6 +48,7 @@ public class OrderItemController {
     }
 
     @PostMapping("/insertFromCart")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     ResponseEntity<ResponseResult> insertOrderFromCart(@RequestBody OrderFromCart newItem) {
         return orderItemService.insertOrderItemFromCart(newItem);
 

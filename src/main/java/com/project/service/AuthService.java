@@ -11,6 +11,7 @@ import com.project.repository.WalletRepository;
 import com.project.response.ResponseResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -164,7 +165,7 @@ public class AuthService {
         } catch (AuthenticationException e) {
             // Handle authentication failure here
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseResult("failed", "Login false", "", 1)
+                    new ResponseResult("failed", "Tài khoản, mật khẩu không đúng !", "", 1)
             );        }
         var user = userRepository.findByUsername(request.getUsername()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
@@ -196,7 +197,22 @@ public class AuthService {
         return userRepository.findAll();
     }
 
-
+    public ResponseEntity<ResponseResult> deleteUser(@PathVariable Long id) {
+        try {
+            userRepository.deleteById(id);
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseResult("ok", "Delete category successfully", "",1)
+            );
+        } catch (DataIntegrityViolationException ex) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseResult("failed", "Cannot delete category because it is referenced by other entities", "",1)
+            );
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseResult("failed", "An error occurred while deleting the category", "",1)
+            );
+        }
+    }
 
     public void generateResetToken(User user) {
         String resetToken = UUID.randomUUID().toString();

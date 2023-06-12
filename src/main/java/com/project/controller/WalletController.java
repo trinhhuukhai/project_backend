@@ -7,6 +7,7 @@ import com.project.service.OrderItemService;
 import com.project.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class WalletController {
     }
 
     @GetMapping("/findByUser/{id}")
+//    @PreAuthorize("hasAuthority('CUSTOMER')")
     public Wallet findbyuser(@RequestBody Long id) {
         return walletService.find(id);
 
@@ -42,12 +44,14 @@ public class WalletController {
 
     @GetMapping("/{id}")
         //Let's return an object with: data, message, status
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     ResponseEntity<ResponseResult> findById(@PathVariable Long id) {
         return walletService.findById(id);
     }
 
     @PostMapping("/{walletId}/top-up")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<ResponseResult> topUp(@PathVariable Long walletId, @RequestParam Double balance) {
-       return  walletService.topUp(walletId,balance);
+        return walletService.topUp(walletId, balance);
     }
 }

@@ -23,7 +23,7 @@ public class CustomerService {
                         new ResponseResult("ok", "Query order item in shop successfully", foundCustomer, foundCustomer.size())
                         //you can replace "ok" with your defined "error code"
                 ):
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseResult("failed", "Cannot find order item in shop with id = "+id, "",foundCustomer.size())
                 );
     }

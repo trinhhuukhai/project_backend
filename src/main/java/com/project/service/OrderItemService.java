@@ -188,7 +188,6 @@ public class OrderItemService {
         order.setStatus("Đang xử lý");
         order.setPaymentStatus("Chưa thanh toán");
 
-//        order.setPayment(payment);
 
         orderRepository.save(order);
         List<OrderItem> orderItemList = new ArrayList<>();
@@ -205,6 +204,7 @@ public class OrderItemService {
             orderItem.setPrice(item.getPrice());
             orderItem.setStatus("Đang xử lý");
             orderItem.setPaymentStatus("Chưa thanh toán");
+            orderItem.setSize(item.getSize());
             Product product = item.getProduct();
 
             //when user order successful then create new customer

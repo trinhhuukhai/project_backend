@@ -68,7 +68,7 @@ public class OrderService {
         order.setStatus("Đang xử lý");
         order.setPaymentStatus("Chưa thanh toán");
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseResult("ok", "Insert Order successfully",orderRepository.save(order),1)
+                new ResponseResult("ok", "Đặt hàng thành công",orderRepository.save(order),1)
         );
     }
 

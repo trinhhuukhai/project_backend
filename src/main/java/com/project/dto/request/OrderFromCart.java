@@ -42,5 +42,7 @@ public class OrderFromCart {
 
     private Shop shop;
 
+    private String size;
+
 
 }

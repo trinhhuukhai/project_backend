@@ -61,7 +61,7 @@ public class AuthController {
     public ResponseEntity<ResponseResult> authenticate(@RequestBody AuthRequest request) {
         return service.login(request);
     }
-//    @CrossOrigin("http://localhost:3000")
+
     @GetMapping({"/getAllUser"})
     @PreAuthorize("hasAuthority('ADMIN')")
     List<User> getAll(){
@@ -92,7 +92,7 @@ public class AuthController {
         if (userOptional.isEmpty()) {
 
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseResult("ok", "User with email" + email + "not found", email, 1)
+                    new ResponseResult("ok",  "Email: " + email + " chưa được đăng ký", "error", 1)
             );
         }
 
@@ -100,12 +100,12 @@ public class AuthController {
         service.generateResetToken(user);
 
 //        String resetUrl = "http://localhost:8080/reset-password?token=" + user.getResetToken();
-        String message = "Su dung ma de thay doi mat khau: " + user.getResetToken();
+        String message = "Sử dụng mã token để thay đổi mật khẩu: " + user.getResetToken();
 
         emailService.sendEmail(user.getEmail(), "Change password", message);
 
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseResult("ok", "Ma token da duoc guir ve email" + user.getEmail(), user.getResetToken(), 1)
+                new ResponseResult("ok", "Mã token đã được gửi về email: " + user.getEmail(), user.getResetToken(), 1)
         );
     }
 
@@ -127,7 +127,7 @@ public class AuthController {
         tokenRepository.delete(token);
 
 
-        return ResponseEntity.ok().body("Password reset successfully");
+        return ResponseEntity.ok().body("Mật khẩu được đặt lại thành công");
     }
 
     @GetMapping("/byRole/{role}")
@@ -151,5 +151,9 @@ public class AuthController {
         return service.findById(id);
     }
 
-
+    @DeleteMapping("/delete/user/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    ResponseEntity<ResponseResult> deleteUser(@PathVariable Long id) {
+        return service.deleteUser(id);
+    }
 }

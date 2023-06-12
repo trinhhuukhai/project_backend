@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -27,6 +28,7 @@ public class PaymentController {
 
 
     @GetMapping("/getAllPayment")
+
     List<Payment> getAll(){
         return (List<Payment>) paymentService.getAllPayment();
     }
@@ -38,71 +40,11 @@ public class PaymentController {
 //    }
 
     @PostMapping("/insert")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     ResponseEntity<ResponseResult> insertPayment(@RequestBody PaymentRequest newPay) {
         return paymentService.addPayment(newPay);
 
     }
-    @GetMapping("/count")
-    public ResponseEntity<Long> countPaymentAmount() {
-        Long count = paymentService.countPaymentAmount();
-        return ResponseEntity.ok(count);
-    }
 
-    @GetMapping("/today")
-    public List<Payment> getPaymentMadeToday() {
-        return paymentService.getPaymentsMadeToday();
-    }
 
-    @GetMapping("/date")
-    public ResponseEntity<List<Payment>> getPaymentByDate(
-            @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") Date date){
-        List<Payment> payments = paymentService.findPaymentByDate(date);
-        return new ResponseEntity<>(payments, HttpStatus.OK);
-    }
-
-    @GetMapping("/rangeDate")
-    public ResponseEntity<List<Payment>> getPaymentByDateRange(@RequestParam("startDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate, @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate) {
-        List<Payment> payments = paymentService.findPaymentByDateRange(startDate, endDate);
-        return new ResponseEntity<>(payments, HttpStatus.OK);
-    }
-
-    @GetMapping("/week")
-    public ResponseEntity<List<Payment>> getPaymentForCurrentWeek() {
-        List<Payment> payments = paymentService.findPaymentForCurrentWeek();
-        return new ResponseEntity<>(payments, HttpStatus.OK);
-    }
-
-    @GetMapping("/month")
-    public ResponseEntity<List<Payment>> getPaymentForCurrentMonth() {
-        List<Payment> payments = paymentService.findPaymentForCurrentMonth();
-        return new ResponseEntity<>(payments, HttpStatus.OK);
-    }
-
-    @GetMapping("/yesterday")
-    public ResponseEntity<List<Payment>> getPaymentFromYesterday() {
-        List<Payment> payments = paymentService.findPaymentFromYesterday();
-        return new ResponseEntity<>(payments, HttpStatus.OK);
-    }
-
-    @GetMapping("/previousMonth")
-    public ResponseEntity<List<Payment>> getPaymentForPreviousMonth() {
-        List<Payment> payments = paymentService.findPaymentForPreviousMonth();
-        return new ResponseEntity<>(payments, HttpStatus.OK);
-    }
-
-    @GetMapping("/lastWeek")
-    public ResponseEntity<List<Payment>> getPaymentForLastWeek() {
-        List<Payment> payments = paymentService.findPaymentForLastWeek();
-        return new ResponseEntity<>(payments, HttpStatus.OK);
-    }
-
-//    @PutMapping("/{id}")
-//    ResponseEntity<ResponseResult> updatePayment(@RequestBody  Payment newPay, @PathVariable Long id) {
-//        return paymentService.updatePayment(newPay,id);
-//    }
-//
-//    @DeleteMapping("/{id}")
-//    ResponseEntity<ResponseResult> deletePayment(@PathVariable Long id) {
-//        return paymentService.deletePay(id);
-//    }
 }

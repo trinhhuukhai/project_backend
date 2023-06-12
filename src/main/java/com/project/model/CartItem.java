@@ -29,9 +29,8 @@ public class CartItem {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "shop_id", nullable = false)
-//    private Shop shop;
+    private String size;
+
 
     @Column(nullable = false)
     private Integer quantity;

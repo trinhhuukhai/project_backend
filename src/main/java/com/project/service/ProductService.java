@@ -68,38 +68,78 @@ public class ProductService {
 
         product.setProductImage(productImage);
 
+        String sizeInput = newPro.getSize();
+
+        // Split the size input by comma if multiple sizes are provided
+        String[] sizeArray = sizeInput.split(",");
+
+        // Create size objects for each size provided
+        for (String sizeName : sizeArray) {
+            Size size = new Size();
+            size.setSizeName(sizeName.trim()); // Trim any leading/trailing spaces
+
+            // Add the size to the product
+            product.getSizes().add(size);
+        }
+
         return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseResult("ok", "Insert Product successfully",productRepository.save(product),1)
         );
 
     }
 
-    public ResponseEntity<ResponseResult> updateProduct( ProductRequest newPro, Long id) {
+    public ResponseEntity<ResponseResult> updateProduct(ProductRequest newPro, Long id) {
+        Optional<Product> updatedPro = productRepository.findById(id);
+        if (updatedPro.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseResult("failed", "Product not found", "", 1)
+            );
+        }
 
-        Category category = categoryRepository.findById(newPro.getCategoryId()).orElseThrow();
-        Shop shop = shopRepository.findById(newPro.getShopId()).orElseThrow();
+        String productImage = "http://192.168.43.199:8443/api/v1/getFile/" + storageService.storageFile(newPro.getProductImage());
 
+        Product product = updatedPro.get();
 
-        String productImage = "http://192.168.43.199:8443/api/v1/getFile/"+ storageService.storageFile(newPro.getProductImage());
-        Optional<Product> updatedPro = productRepository.findById(id)
-                .map(pro -> {
-                    pro.setName(newPro.getName());
-                    pro.setDescription(newPro.getDescription());
-                    pro.setBrand(newPro.getBrand());
-                    pro.setColor(newPro.getColor());
-                    pro.setInputPrice(newPro.getIn_price());
-                    pro.setOutputPrice(newPro.getOut_price());
-                    pro.setInventory(newPro.getInventory());
-                    pro.setSold(0);
-                    pro.setCategory(category);
-                    pro.setProductImage(productImage);
-                    pro.setShop(shop);
-                    return productRepository.save(pro);
-                });
+        product.setName(newPro.getName() != null ? newPro.getName() : product.getName());
+        product.setDescription(newPro.getDescription() != null ? newPro.getDescription() : product.getDescription());
+        product.setInventory(newPro.getInventory() != 0 ? newPro.getInventory() : product.getInventory());
+        product.setInputPrice(newPro.getIn_price() != null ? newPro.getIn_price() : product.getInputPrice());
+        product.setOutputPrice(newPro.getOut_price() != null ? newPro.getOut_price() : product.getOutputPrice());
+        product.setColor(newPro.getColor() != null ? newPro.getColor() : product.getColor());
+        product.setProductImage(newPro.getProductImage() != null ? productImage : product.getProductImage());
+
+        productRepository.save(product);
+
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseResult("ok", "Update Customer successfully", updatedPro,1)
+                new ResponseResult("success", "Product updated successfully", product, 1)
         );
     }
+
+
+//        Category category = categoryRepository.findById(newPro.getCategoryId()).orElseThrow();
+//        Shop shop = shopRepository.findById(newPro.getShopId()).orElseThrow();
+//
+//
+//        String productImage = "http://192.168.43.199:8443/api/v1/getFile/"+ storageService.storageFile(newPro.getProductImage());
+//        Optional<Product> updatedPro = productRepository.findById(id)
+//                .map(pro -> {
+//                    pro.setName(newPro.getName() != null ? newPro.getName() : user.getName());
+//                    pro.setDescription(newPro.getDescription());
+//                    pro.setBrand(newPro.getBrand());
+//                    pro.setColor(newPro.getColor());
+//                    pro.setInputPrice(newPro.getIn_price());
+//                    pro.setOutputPrice(newPro.getOut_price());
+//                    pro.setInventory(newPro.getInventory());
+//                    pro.setSold(pro.getSold());
+//                    pro.setCategory(category);
+//                    pro.setProductImage(productImage);
+//                    pro.setShop(shop);
+//                    return productRepository.save(pro);
+//                });
+//        return ResponseEntity.status(HttpStatus.OK).body(
+//                new ResponseResult("ok", "Update Customer successfully", updatedPro,1)
+//        );
+//    }
 
     //Delete a Product => DELETE method
     public ResponseEntity<ResponseResult> deleteProduct(@PathVariable Long id) {

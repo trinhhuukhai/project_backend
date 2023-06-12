@@ -8,6 +8,7 @@ import com.project.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class CategoryController {
     private ProductService productService;
 
     @GetMapping("/getAllCategory")
-//    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+//    @PreAuthorize("hasAuthority('ADMIN')")
     List<Category> getAll(){
         return categoryService.getAllCategory();
     }
@@ -32,11 +33,13 @@ public class CategoryController {
 
     @GetMapping("/{id}")
         //Let's return an object with: data, message, status
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<ResponseResult> findById(@PathVariable Long id) {
         return categoryService.findById(id);
     }
 
     @PostMapping("/insert")
+    @PreAuthorize("hasAuthority('ADMIN')")
 //    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     ResponseEntity<ResponseResult> insertCategory(@RequestBody Category newCat) {
         return categoryService.insertCategory(newCat);
@@ -44,11 +47,13 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<ResponseResult> updateCategory(@RequestBody Category newCat, @PathVariable Long id) {
         return categoryService.updateCategory(newCat,id);
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<ResponseResult> deleteCategory(@PathVariable Long id) {
         return categoryService.deleteCategory(id);
     }

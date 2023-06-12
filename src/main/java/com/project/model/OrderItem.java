@@ -59,4 +59,6 @@ public class OrderItem {
 
     private String paymentStatus;
 
+    private String size;
+
 }

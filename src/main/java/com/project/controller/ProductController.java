@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class ProductController {
 
 
     @GetMapping("/getAllProduct")
+
     private AllResponse<List<Product>> getAll(){
         List<Product> allProduct = productService.getAllProduct();
         return new AllResponse<>(allProduct.size(), allProduct);
@@ -40,6 +42,7 @@ public class ProductController {
 //    }
 
     @GetMapping("/{id}")
+
         //Let's return an object with: data, message, status
     ResponseEntity<ResponseResult> findById(@PathVariable Long id) {
         return productService.findById(id);
@@ -57,11 +60,13 @@ public class ProductController {
     }
 
     @PutMapping("/{id}")
+
     ResponseEntity<ResponseResult> updateProduct(@ModelAttribute ProductRequest newPro, @PathVariable Long id) {
         return productService.updateProduct(newPro,id);
     }
 
     @DeleteMapping("/{id}")
+
     ResponseEntity<ResponseResult> deleteProduct(@PathVariable Long id) {
         return productService.deleteProduct(id);
     }
@@ -80,12 +85,14 @@ public class ProductController {
     }
 
     @PostMapping(value = {"/insertImage"})
+
     ResponseEntity<ResponseResult> insertProductImage( @ModelAttribute ImageRequest newImg) {
         return productImageService.insertImage(newImg);
 
     }
 
     @DeleteMapping("/image/{id}")
+
     ResponseEntity<ResponseResult> deleteImage(@PathVariable Long id) {
         return productImageService.deleteImage(id);
     }

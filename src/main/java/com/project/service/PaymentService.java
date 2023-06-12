@@ -54,7 +54,7 @@ public class PaymentService {
         if (order.getPaymentStatus().equalsIgnoreCase("Đã thanh toán")) {
             // If order has already been paid, return an error response
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseResult("error", "Order has already been paid", null, 0)
+                    new ResponseResult("error", "Đơn hàng đã thanh toán", null, 0)
             );
         }
         // Calculate the payment amount
@@ -62,42 +62,33 @@ public class PaymentService {
 
         // Get the user from the order
         User user = order.getUser();
-
         // Check if the user has enough balance in the wallet
         if (user.getWallet().getBalance() < paymentAmount) {
             // If user doesn't have enough balance, return an error response
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                    new ResponseResult("error", "Not enough funds in wallet, please recharge", null, 0)
+                    new ResponseResult("error", "Không đủ tiền trong ví, vui lòng nạp thêm", null, 0)
             );
         }
-
         // Create a new payment
         Payment payment = new Payment();
         payment.setOrder(order);
         payment.setAmount(paymentAmount);
-
         // Save the payment
         paymentRepository.save(payment);
-
         // Update the payment status of the order
         order.setPaymentStatus("Đã thanh toán");
-
         for (OrderItem item : orderItem) {
             item.setPaymentStatus("Đã thanh toán");
         }
-
         orderItemRepository.saveAll(orderItem);
-
         orderRepository.save(order);
-
         // Deduct the payment amount from the user's wallet
         Double newBalance = user.getWallet().getBalance() - paymentAmount;
         user.getWallet().setBalance(newBalance);
         userRepository.save(user);
-
         // Return a success response
         return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseResult("ok", "Payment success", payment, 1)
+                new ResponseResult("ok", "Thanh toán thành công", payment, 1)
         );
     }
 

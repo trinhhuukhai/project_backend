@@ -23,4 +23,6 @@ public class CartItemRequest {
     private Integer quantity;
 
     private Double price;
+
+    private String size;
 }

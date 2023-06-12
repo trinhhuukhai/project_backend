@@ -44,5 +44,7 @@ public class ProductRequest {
 
     private MultipartFile productImage;
 
+    private String size;
+
 
 }
